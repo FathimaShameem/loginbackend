@@ -36,32 +36,24 @@ app.post('/signup', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    
-
     try {
-        const check = await LogInCollection1.findOne({ name: req.body.name })
+        const check = await LogInCollection1.findOne({ name: req.body.name });
+
+        if (!check) {
+            res.send("User not found");
+            return;
+        }
 
         if (check.password === req.body.password) {
-            res.status(201).render("home", { naming: `${req.body.password}+${req.body.name}` })
+            res.status(201).render("home", { naming: `${req.body.password}+${req.body.name}` });
+        } else {
+            res.send('<script>alert("Incorrect password"); window.history.back();</script>');
         }
-
-        else {
-            res.send("incorrect password")
-        }
-
-
-    } 
-    
-    catch (e) {
-
-        res.send("wrong details")
-        
-
+    } catch (e) {
+        res.send("An error occurred while logging in");
     }
-    
+});
 
-    res.render("home")
-})
 
 
 app.listen(3000, () => {
